@@ -1,0 +1,166 @@
+---
+title: "Getting help in R"
+output: html_document
+---
+
+Based on [stackoverflow topic](http://stackoverflow.com/questions/15289995/how-to-get-help-in-r)
+
+## Getting help on a function that you know the name of
+
+Use `?` or, equivalently, `help`.
+
+```
+?mean
+help(mean) # same
+```
+
+For non-standard names use quotes or backquotes.
+
+```
+?`if`
+?"if"       # same
+help("if")  # same
+```
+
+There are also help pages for datasets, general topics and some packages.
+
+```
+?iris
+?Syntax
+?lubridate    
+```
+
+Use the `example` function to see examples of how to use it.
+
+```
+example(paste)
+example(`for`)
+```
+
+The `demo` function gives longer demonstrations of how to use a function.
+
+```
+demo()                           # all demos in loaded pkgs
+demo(package = .packages(all.available = TRUE)) # all demos
+demo(plotmath)
+demo(graphics)
+```
+
+## Finding a function that you don't know the name of
+
+Use `??` or, equivalently, `help.search`.
+
+```
+??regression
+help.search("regression")
+```
+
+Again, non-standard names and phrases need to be quoted.
+```
+??"logistic regression"
+```
+
+`apropos` finds functions and variables that match a regular expression.
+
+```
+apropos("z$") # all fns ending with "z"
+```
+
+[rseek.org](http://rseek.org) is an R search engine with a Firefox plugin.
+
+`RSiteSearch` searches several sites directly from R.
+
+`findFn` in sos wraps RSiteSearch returning the results as a HTML table.
+
+```
+RSiteSearch("logistic regression")
+
+library(sos)
+findFn("logistic regression")
+```
+
+## Finding packages
+
+`available.packages` tells you all the packages that are available in the repositories that you set via `setRepositories`. `installed.packages` tells you all the packages that you have installed in all the libraries specified in `.libPaths`. `library` (without any arguments) is similar, returning the names and tag-line of installed packages.
+```
+View(available.packages())
+View(installed.packages())
+library()
+.libPaths()
+```
+Similarly, data with no arguments tells you which datasets are available on your machine.
+```
+data()
+```
+`search` tells you which packages have been loaded.
+
+```
+search()
+```
+
+`packageDescription` shows you the contents of a package's DESCRIPTION file. Likewise news read the NEWS file.
+
+```
+packageDescription("utils")    
+news(package = "ggplot2")
+```
+
+Listing all function in package
+```
+ls("package:arules")
+find.funs("package:arules")
+```
+
+## Getting help on variables
+
+`ls` lists the variables in an environment.
+
+```
+ls()                 # global environment
+ls(all.names = TRUE) # including names beginning with '.'
+ls("package:sp")     # everything for the sp package
+```
+
+Most variables can be inspected using `str` or `summary`.
+
+```
+str(sleep)
+summary(sleep)
+```
+
+`ls.str` is like a combination of ls and str.
+
+```
+ls.str()
+ls.str("package:grDevices")
+lsf.str("package:grDevices")  # only functions    
+```
+
+For large variables (particularly data frames), the `head` function is useful for displaying the first few rows.
+
+```
+head(sleep)
+```
+
+`args` shows you the arguments for a function.
+
+```
+args(read.csv)
+```
+
+## General learning about R
+
+The [Stackoverflow](https://stackoverflow.com/tags/r/info) is a very comprehensive set of links to free R resources.
+
+Many topics in R are documented via `vignettes`, listed with `browseVignettes`.
+
+```
+browseVignettes()
+vignette("intro_sp", package = "sp")
+```
+
+By combining vignette with edit, you can get its code chunks in an editor.
+
+```
+edit(vignette("intro_sp",package="sp"))    
+```
