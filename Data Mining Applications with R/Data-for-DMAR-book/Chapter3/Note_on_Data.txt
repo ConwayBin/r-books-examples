@@ -1,0 +1,9 @@
+Note that the code accompanying this chapter allows for the reader to collect their own data directly from Twitter. The code does not show how to use the data in the CSV file.
+
+The data provided here in the CSV file should be loaded with the following lines:
+
+dir <- "..." # address of the folder on your computer containing the file
+file <- "Marwick_DMAR-chapter-3.csv" # name of the CSV file
+df <- read.csv(paste(dir, file, sep = "/"), stringsAsFactors = FALSE)
+
+Then the data in the CSV file are ready for analysis using the accompanying R code. 

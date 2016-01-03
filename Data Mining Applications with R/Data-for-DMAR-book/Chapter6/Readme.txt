@@ -1,0 +1,1 @@
+To run the provided R script, a DBLite database needs to be created and the txt files need to be loaded into DBLite.

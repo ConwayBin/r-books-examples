@@ -1,0 +1,3 @@
+The examples for Chapter 12 can be downloaded from:
+
+http://www.sciviews.org/zooimage/Data mining with R/

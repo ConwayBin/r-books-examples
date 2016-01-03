@@ -1,0 +1,3 @@
+CrimeData	https://data.cityofchicago.org/api/views/x2n5-8w5q/rows.csv?accessType=DOWNLOAD
+ShapeFilesForBeats	https://data.cityofchicago.org/Public-Safety/Boundaries-Police-Beats/kd6k-pxkv
+ShapeFilesForPoliceStations	https://data.cityofchicago.org/Public-Safety/Police-Stations-Shapefiles/tc9m-x6u6
