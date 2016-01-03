@@ -3,10 +3,8 @@ library(cluster)
 
 data(iris)
 
-iris2 <- iris
+iris$Species <- as.numeric(iris$Species)
 
-iris2$Species <- as.numeric(iris2$Species)
+kmeans <- kmeans(x = iris, centers=5)
 
-kmeans <- kmeans(x = iris2, centers=5)
-
-clusplot(iris2, kmeans$cluster, color=TRUE, shade=TRUE, labels=13, lines=0)
+clusplot(iris, kmeans$cluster, color=TRUE, shade=TRUE, labels=13, lines=0)

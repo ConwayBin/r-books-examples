@@ -111,6 +111,8 @@ ls("package:arules")
 find.funs("package:arules")
 ```
 
+`help(package = "recommenderlab")` - getting help on package
+
 ## Getting help on variables
 
 `ls` lists the variables in an environment.
