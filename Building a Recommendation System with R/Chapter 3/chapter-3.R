@@ -93,6 +93,7 @@ df_parameters <- data.frame(
   parameter = names(recommender_models$IBCF_realRatingMatrix$parameters),
   default = unlist(recommender_models$IBCF_realRatingMatrix$parameters)
   )
+
 rownames(df_parameters) <- NULL
 pander(head(df_parameters))
 
