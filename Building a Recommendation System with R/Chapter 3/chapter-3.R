@@ -1,207 +1,129 @@
-## ----echo=FALSE, warning=FALSE, message=FALSE----------------------------
-library(pander)
 set.seed(1)
 
-## ----warning=FALSE, message=FALSE----------------------------------------
 if(!"recommenderlab" %in% rownames(installed.packages())){
   install.packages("recommenderlab")
 }
 
-## ----warning=FALSE, message=FALSE----------------------------------------
-library("recommenderlab")
+library(recommenderlab)
 help(package = "recommenderlab")
 
-## ----results='asis'------------------------------------------------------
 data_package <- data(package = "recommenderlab")
+data_package$results[, "Item"]
 
-## ----eval=FALSE----------------------------------------------------------
-## data_package$results[, "Item"]
-
-## ----echo=FALSE----------------------------------------------------------
-pander(data_package$results[, "Item"], nrow = 1)
-
-## ------------------------------------------------------------------------
 data(MovieLense)
 MovieLense
 
-## ------------------------------------------------------------------------
 class(MovieLense)
 
-## ----eval=FALSE----------------------------------------------------------
-## methods(class = class(MovieLense))
+methods(class = class(MovieLense))
 
-## ----echo=FALSE----------------------------------------------------------
-methods_matrix <- methods(class = class(MovieLense))
-methods_to_print <- as.character(methods_matrix)
-methods_to_print <- methods_to_print[!grepl("coerce", methods_to_print)]
-methods_to_print <- gsub(",.*", "", methods_to_print, perl = TRUE)
-methods_to_print <- c(methods_to_print, "", "")
-pander(matrix(methods_to_print, ncol = 3))
+#methods_matrix <- methods(class = class(MovieLense))
+#methods_to_print <- as.character(methods_matrix)
+#methods_to_print <- methods_to_print[!grepl("coerce", methods_to_print)]
+#methods_to_print <- gsub(",.*", "", methods_to_print, perl = TRUE)
+#methods_to_print <- c(methods_to_print, "", "")
+#pander(matrix(methods_to_print, ncol = 3))
 
-## ------------------------------------------------------------------------
 object.size(MovieLense)
 object.size(as(MovieLense, "matrix"))
-
-## ------------------------------------------------------------------------
 object.size(as(MovieLense, "matrix")) / object.size(MovieLense)
 
-## ------------------------------------------------------------------------
 similarity_users <- similarity(MovieLense[1:4, ], method = "cosine", which = "users")
 
-## ------------------------------------------------------------------------
 class(similarity_users)
 
-## ----eval=FALSE----------------------------------------------------------
-## as.matrix(similarity_users)
+as.matrix(similarity_users)
 
-## ----echo=FALSE----------------------------------------------------------
-pander(as.matrix(similarity_users))
-
-## ------------------------------------------------------------------------
 image(as.matrix(similarity_users), main = "User similarity")
 
-## ------------------------------------------------------------------------
 similarity_items <- similarity(MovieLense[, 1:4], method = "cosine", which = "items")
+as.matrix(similarity_items)
 
-## ----eval=FALSE----------------------------------------------------------
-## as.matrix(similarity_items)
-
-## ----echo=FALSE----------------------------------------------------------
-pander(as.matrix(similarity_items))
-
-## ------------------------------------------------------------------------
 image(as.matrix(similarity_items), main = "Item similarity")
 
-## ------------------------------------------------------------------------
 recommender_models <- recommenderRegistry$get_entries(dataType = "realRatingMatrix")
+names(recommender_models)
 
-## ----eval=FALSE----------------------------------------------------------
-## names(recommender_models)
-
-## ----echo=FALSE----------------------------------------------------------
 df_models <- data.frame(model = names(recommender_models))
-pander(df_models)
 
-## ------------------------------------------------------------------------
-lapply(recommender_models, "[[", "description")
+lapply(recommender_models, "[[", "description") # we are interested in UBCF and IBCF
 
-## ----eval=FALSE----------------------------------------------------------
-## recommender_models$IBCF_realRatingMatrix$parameters
+recommender_models$IBCF_realRatingMatrix$parameters
 
-## ----echo=FALSE----------------------------------------------------------
 df_parameters <- data.frame(
   parameter = names(recommender_models$IBCF_realRatingMatrix$parameters),
   default = unlist(recommender_models$IBCF_realRatingMatrix$parameters)
-  )
+)
 
 rownames(df_parameters) <- NULL
-pander(head(df_parameters))
 
-## ----echo=FALSE, warning=FALSE, message=FALSE----------------------------
-library(pander)
-set.seed(1)
-
-## ----warning=FALSE, message=FALSE----------------------------------------
-library("recommenderlab")
 library("ggplot2")
-data(MovieLense)
-class(MovieLense)
 
-## ------------------------------------------------------------------------
 dim(MovieLense)
 
-## ------------------------------------------------------------------------
 slotNames(MovieLense)
 
-## ------------------------------------------------------------------------
 class(MovieLense@data)
 dim(MovieLense@data)
 
-## ------------------------------------------------------------------------
 vector_ratings <- as.vector(MovieLense@data)
 unique(vector_ratings)
 
-## ------------------------------------------------------------------------
 table_ratings <- table(vector_ratings)
+table_ratings
 
-## ----eval=FALSE----------------------------------------------------------
-## table_ratings
-
-## ----echo=FALSE----------------------------------------------------------
 df_ratings <- data.frame(
   rating = names(table_ratings),
   occurrences = as.vector(table_ratings)
-  )
-pander(head(df_ratings))
+)
 
-## ------------------------------------------------------------------------
 vector_ratings <- vector_ratings[vector_ratings != 0]
-
-## ------------------------------------------------------------------------
 vector_ratings <- factor(vector_ratings)
-qplot(vector_ratings) + ggtitle("Distribution of the ratings")
+qplot(vector_ratings) 
+  + ggtitle("Distribution of the ratings")
 
-## ------------------------------------------------------------------------
 views_per_movie <- colCounts(MovieLense)
 
-## ------------------------------------------------------------------------
 table_views <- data.frame(
   movie = names(views_per_movie),
   views = views_per_movie
-  )
+)
 table_views <- table_views[order(table_views$views, decreasing = TRUE), ]
 
-## ------------------------------------------------------------------------
 ggplot(table_views[1:6, ], aes(x = movie, y = views)) +
   geom_bar(stat="identity") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   ggtitle("Number of views of the top movies")
 
-## ------------------------------------------------------------------------
 average_ratings <- colMeans(MovieLense)
 qplot(average_ratings) +
   stat_bin(binwidth = 0.1) +
   ggtitle("Distribution of the average movie rating")
 
-## ------------------------------------------------------------------------
 average_ratings_relevant <- average_ratings[views_per_movie > 100]
 qplot(average_ratings_relevant) +
   stat_bin(binwidth = 0.1) +
   ggtitle(paste("Distribution of the relevant average ratings"))
 
-## ------------------------------------------------------------------------
 image(MovieLense, main = "Heatmap of the rating matrix")
 
-## ------------------------------------------------------------------------
 image(MovieLense[1:10, 1:15],
       main = "Heatmap of the first rows and columns")
 
 ## ------------------------------------------------------------------------
-min_n_movies <- quantile(rowCounts(MovieLense), 0.99)
-min_n_users <- quantile(colCounts(MovieLense), 0.99)
+min_n_movies <- quantile(rowCounts(MovieLense), 0.99) # top 1% of items
+min_n_users <- quantile(colCounts(MovieLense), 0.99)  # top 1% of users
 min_n_movies
 min_n_users
 
-## ------------------------------------------------------------------------
 image(MovieLense[rowCounts(MovieLense) > min_n_movies,
                  colCounts(MovieLense) > min_n_users],
       main = "Heatmap of the top users and movies")
 
-## ----echo=FALSE, warning=FALSE, message=FALSE----------------------------
-library(pander)
-set.seed(1)
-
-## ----echo=FALSE, warning=FALSE, message=FALSE----------------------------
-library("recommenderlab")
-library("ggplot2")
-data(MovieLense)
-
-## ------------------------------------------------------------------------
 ratings_movies <- MovieLense[rowCounts(MovieLense) > 50,
                              colCounts(MovieLense) > 100]
 ratings_movies
 
-## ------------------------------------------------------------------------
 
 # visualize the top matrix
 min_movies <- quantile(rowCounts(ratings_movies), 0.98)
