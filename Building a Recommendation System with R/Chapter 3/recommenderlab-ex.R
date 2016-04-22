@@ -122,36 +122,31 @@ recom
 as(recom, "matrix")[,1:10]
 
 
-###################################################
-### code chunk number 27: recommenderlab.Rnw:1357-1360
-###################################################
-e <- evaluationScheme(Jester5k[1:1000], method="split", train=0.9, 
-                      given=15, goodRating=5)
+# evaluation of predicted ratings
+e <- evaluationScheme(Jester5k[1:1000], 
+                      method="split", 
+                      train=0.9, 
+                      given=15, 
+                      goodRating=5)
 e
 
-
-###################################################
-### code chunk number 28: recommenderlab.Rnw:1366-1371
-###################################################
+# create 2 recommender models
+# User Based Collaborative Filtering
 r1 <- Recommender(getData(e, "train"), "UBCF")
 r1
-
+# Item Based Collaborative Filtering
 r2 <- Recommender(getData(e, "train"), "IBCF")
 r2
 
 
-###################################################
-### code chunk number 29: recommenderlab.Rnw:1378-1382
-###################################################
+# predict ratings for both methods
 p1 <- predict(r1, getData(e, "known"), type="ratings")
 p1
 p2 <- predict(r2, getData(e, "known"), type="ratings")
 p2
 
 
-###################################################
-### code chunk number 30: recommenderlab.Rnw:1388-1394
-###################################################
+# calculate error rate
 error <- rbind(
   calcPredictionAccuracy(p1, getData(e, "unknown")),
   calcPredictionAccuracy(p2, getData(e, "unknown"))
@@ -160,18 +155,18 @@ rownames(error) <- c("UBCF","IBCF")
 error
 
 
-###################################################
-### code chunk number 31: recommenderlab.Rnw:1407-1410
-###################################################
-scheme <- evaluationScheme(Jester5k[1:1000], method="cross", k=4, given=3,
+# evaluation of top-N recommendation 
+scheme <- evaluationScheme(Jester5k[1:1000], 
+                           method="cross", 
+                           k=4, 
+                           given=3,
                            goodRating=5)
 scheme
 
 
-###################################################
-### code chunk number 32: recommenderlab.Rnw:1417-1420
-###################################################
-results <- evaluate(scheme, method="POPULAR", type = "topNList", 
+results <- evaluate(scheme, 
+                    method="POPULAR", 
+                    type = "topNList", 
                     n=c(1,3,5,10,15,20))
 results
 
